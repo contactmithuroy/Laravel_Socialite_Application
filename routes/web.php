@@ -33,3 +33,31 @@ Route::get('login/github/callback',[App\Http\Controllers\Auth\LoginController::c
 // Google login
 Route::get('login/google', [App\Http\Controllers\Auth\LoginController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('login/google/callback', [App\Http\Controllers\Auth\LoginController::class, 'handleGoogleCallback']);
+
+// LinkedIn Login
+Route::get('login/linkedin', [App\Http\Controllers\Auth\LoginController::class, 'redirectToLinkedin'])->name('login.linkedin');
+Route::get('login/linkedin/callback', [App\Http\Controllers\Auth\LoginController::class, 'handleLinkedinCallback']);
+
+
+
+// ======================Custom Login==============================================
+Route::get('/login/admin', [App\Http\Controllers\Authentic\LoginController::class, 'showAdminLoginForm']);
+Route::get('/login/blogger', [App\Http\Controllers\Authentic\LoginController::class,'showBloggerLoginForm']);
+Route::get('/register/admin', [App\Http\Controllers\Authentic\RegisterController::class,'showAdminRegisterForm']);
+Route::get('/register/blogger', [App\Http\Controllers\Authentic\RegisterController::class,'showBloggerRegisterForm']);
+
+Route::post('/login/admin', [App\Http\Controllers\Authentic\LoginController::class,'adminLogin']);
+Route::post('/login/blogger', [App\Http\Controllers\Authentic\LoginController::class,'bloggerLogin']);
+Route::post('/register/admin', [App\Http\Controllers\Authentic\RegisterController::class,'createAdmin']);
+Route::post('/register/blogger', [App\Http\Controllers\Authentic\RegisterController::class,'createBlogger']);
+
+Route::group(['middleware' => 'auth:blogger'], function () {
+    Route::view('/blogger', 'blogger');
+});
+
+Route::group(['middleware' => 'auth:admin'], function () {
+    
+    Route::view('/admin', 'admin');
+});
+
+Route::post('/authentic/logout', [App\Http\Controllers\Authentic\LoginController::class,'logout'])->name('adminBloggerLogout');

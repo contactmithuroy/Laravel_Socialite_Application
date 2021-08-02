@@ -83,6 +83,20 @@ class LoginController extends Controller
 
     }
 
+    // Github login
+    public function redirectToLinkedin(){
+        return Socialite::driver('linkedin')->redirect();
+    }
+    // Github Callback
+    public function handleLinkedinCallback(){
+        $user = Socialite::driver('linkedin')->user();
+
+        $this->_registerOrLoginUser($user);
+        // Route home after login
+        return redirect()->route('home');
+
+    }
+
     // create user
     public function _registerOrLoginUser($data){
         $user = User::where('email','=',$data->email)->first();
